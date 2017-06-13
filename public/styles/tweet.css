@@ -16,6 +16,7 @@ article.tweet header img {
   width: 3.1em;
   height: 3.1em;
   float: left;
+  border-radius: 0.6em;
 }
 
 article.tweet header .name {
