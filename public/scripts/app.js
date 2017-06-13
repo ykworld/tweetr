@@ -64,36 +64,37 @@ $(document).ready(function() {
   }
 
   function createTweetElement(tweet) {
-    let $tweet = $("<article>").addClass("tweet");
-    let $header = $("<header>");
-    let $header_img = $("<img>").addClass("logo").attr("src", tweet.user.avatars.small);
-    let $header_name = $("<span>").addClass("name").text(tweet.user.name);
-    let $header_id = $("<span>").addClass("id").text(tweet.user.handle);
-    let $section = $("<section>");
-    let $section_content = $("<p>").text(tweet.content.text);
-    let $footer = $("<footer>");
-    let $footer_date = $("<span>").addClass("date").text(jQuery.timeago(tweet.created_at));
-    let $footer_icon_group = $("<div>").addClass("icons");
-    let $footer_icon_symbol_link = $("<a>");
-    let $footer_icon_symbol_img = $("<img>").attr("src", "/images/symbol.png");
-    let $footer_icon_arrow_link = $("<a>");
-    let $footer_icon_arrow_img = $("<img>").attr("src", "/images/arrows.png");
-    let $footer_icon_like_link = $("<a>");
-    let $footer_icon_like_img = $("<img>").attr("src", "/images/like.png");
-
-    $header.append($header_img).append($header_name).append($header_id);
-    $section.append($section_content);
-    $footer_icon_symbol_link.append($footer_icon_symbol_img);
-    $footer_icon_arrow_link.append($footer_icon_arrow_img);
-    $footer_icon_like_link.append($footer_icon_like_img);
-    $footer_icon_group.append($footer_icon_symbol_link).append($footer_icon_arrow_link).append($footer_icon_like_link);
-    $footer.append($footer_date).append($footer_icon_group);
-    $tweet.append($header).append($section).append($footer);
+    let $tweet = $("<article>").addClass("tweet")
+                  .append(
+                      $("<header>")
+                      .append($("<img>").addClass("logo").attr("src", tweet.user.avatars.small))
+                      .append($("<span>").addClass("name").text(tweet.user.name))
+                      .append($("<span>").addClass("id").text(tweet.user.handle))
+                  ).append(
+                      $("<section>")
+                      .append($("<p>").text(tweet.content.text))
+                  ).append(
+                      $("<footer>")
+                      .append($("<span>").addClass("date").text(jQuery.timeago(tweet.created_at)))
+                      .append(
+                              $("<div>").addClass("icons")
+                                  .append(
+                                    $("<a>")
+                                    .append($("<img>").attr("src", "/images/symbol.png"))
+                                  )
+                                  .append(
+                                    $("<a>")
+                                    .append($("<img>").attr("src", "/images/arrows.png"))
+                                  )
+                                  .append(
+                                    $("<a>")
+                                    .append($("<img>").attr("src", "/images/like.png"))
+                                  )
+                              )
+                  );
 
     return $tweet;
   }
-
-  //console.log(createTweetElement(data));
 
   renderTweets(data);
 
