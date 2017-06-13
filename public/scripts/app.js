@@ -97,7 +97,7 @@ $(document).ready(function() {
 
   renderTweets(data);
 
-    $(".tweet").hover(
+  $(".tweet").hover(
     function() {
       $(this).addClass("tweet_hover");
       $(this).children("header").addClass("tweet_header_hover");
@@ -108,6 +108,5 @@ $(document).ready(function() {
       $(this).find(".icons").removeClass("tweet_footer_hover");
     }
   );
-
 
 });
