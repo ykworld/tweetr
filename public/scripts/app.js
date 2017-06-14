@@ -6,6 +6,12 @@
 
 $(document).ready(function() {
 
+  $(".compose").click(() => {
+    $(".new-tweet").toggle("1s", function () {
+      $(this).find('textarea').focus();
+    });
+  });
+
   function hover() {
     $(".tweet").hover(
       function() {
