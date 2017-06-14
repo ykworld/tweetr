@@ -6,9 +6,10 @@
 
 $(document).ready(function() {
 
+  // Apply animation effect when click compose button
   $(".compose").click(() => {
     $(".new-tweet").toggle("1s", function () {
-      $(this).find('textarea').focus();
+      $(this).find('textarea').focus(); // auto focus when animation effect is done
     });
   });
 
@@ -27,10 +28,7 @@ $(document).ready(function() {
   }
 
   function renderTweets(tweets) {
-    // loops through tweets
-      // calls createTweetElement for each tweet
-      // takes return value and appends it to the tweets container
-    tweets.forEach(function(tweet) {
+    tweets.forEach((tweet) => {
       $(".container").append(createTweetElement(tweet));
     });
   }
@@ -78,6 +76,7 @@ $(document).ready(function() {
       renderTweets(data);
     })
     .done(() => {
+      // apply hover style after receiving data
       hover();
     });
   }
@@ -90,11 +89,11 @@ $(document).ready(function() {
 
     // validation check
     let textarea = $(this).children("textarea");
-    if (textarea.val() === "" || textarea.val() === null) {
+    if (textarea.val() === "" || textarea.val() === null) { // NULL & EMPTY check
       alert("Message is empty!");
       textarea.focus();
       return;
-    } else if (textarea.val().length > 140) {
+    } else if (textarea.val().length > 140) { // Letter limit check
       alert("Message limit is 140");
       textarea.focus();
       return;
@@ -102,6 +101,7 @@ $(document).ready(function() {
 
     $.post("/tweets", $(this).serialize())
      .done((data, status) => {
+      // Recreate DOM
       $(".container .tweet").remove();
       loadTweets();
      })
