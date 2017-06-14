@@ -65,6 +65,10 @@ $(document).ready(function() {
   // get tweets data form server using ajax
   function loadTweets() {
     $.get("/tweets", (data) => {
+      // sort by date
+      data = data.sort((a, b) => {
+        return b.created_at - a.created_at;
+      });
       renderTweets(data);
     })
     .done(() => {
@@ -77,9 +81,23 @@ $(document).ready(function() {
   // Submit the form data to server
   $(".new-tweet form").on("submit", function(event) {
     event.preventDefault();
+
+    // validation check
+    let textarea = $(this).children("textarea");
+    if (textarea.val() === "" || textarea.val() === null) {
+      alert("Message is empty!");
+      textarea.focus();
+      return;
+    } else if (textarea.val().length > 140) {
+      alert("Message limit is 140");
+      textarea.focus();
+      return;
+    }
+
     $.post("/tweets", $(this).serialize())
      .done((data, status) => {
-      console.log(status);
+      $(".container .tweet").remove();
+      loadTweets();
      })
      .fail((error) => {
        console.log(error.responseText);
