@@ -47,6 +47,7 @@
 
 #nav-bar .compose:hover{
   opacity: 1.0;
+  cursor: pointer;
 }
 
 #nav-bar .compose img {
