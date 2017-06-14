@@ -99,15 +99,26 @@ $(document).ready(function() {
   renderTweets(data);
 
   $(".tweet").hover(
-    function() {
+    () => {
       $(this).addClass("tweet_hover");
       $(this).children("header").addClass("tweet_header_hover");
       $(this).find(".icons").addClass("tweet_footer_hover");
-    }, function() {
+    }, () => {
       $(this).removeClass("tweet_hover");
       $(this).children("header").removeClass("tweet_header_hover");
       $(this).find(".icons").removeClass("tweet_footer_hover");
     }
   );
 
+  // Submit the form data to server
+  $(".new-tweet form").on("submit", function(event) {
+    event.preventDefault();
+    $.post("/tweets", $(this).serialize())
+     .done((data, status) => {
+      console.log(status);
+     })
+     .fail((error) => {
+       console.log(error.responseText);
+     });
+  });
 });
