@@ -13,20 +13,6 @@ $(document).ready(function() {
     });
   });
 
-  function hover() {
-    $(".tweet").hover(
-      function() {
-        $(this).addClass("tweet_hover");
-        $(this).children("header").addClass("tweet_header_hover");
-        $(this).find(".icons").addClass("tweet_footer_hover");
-      }, function() {
-        $(this).removeClass("tweet_hover");
-        $(this).children("header").removeClass("tweet_header_hover");
-        $(this).find(".icons").removeClass("tweet_footer_hover");
-      }
-    );
-  }
-
   function renderTweets(tweets) {
     tweets.forEach((tweet) => {
       $(".container").append(createTweetElement(tweet));
@@ -60,10 +46,42 @@ $(document).ready(function() {
                                     $("<a>")
                                     .append($("<img>").attr("src", "/images/like.png"))
                                   )
+                                  .append(
+                                    $("<a>").addClass("delete")
+                                    .append($("<img>").attr("src", "/images/delete.png"))
+                                  )
                               )
                   );
 
     return $tweet;
+  }
+
+  function action() {
+    $(".tweet").hover(
+      function() {
+        $(this).addClass("tweet_hover");
+        $(this).children("header").addClass("tweet_header_hover");
+        $(this).find(".icons").addClass("tweet_footer_hover");
+      }, function() {
+        $(this).removeClass("tweet_hover");
+        $(this).children("header").removeClass("tweet_header_hover");
+        $(this).find(".icons").removeClass("tweet_footer_hover");
+      }
+    );
+
+    $(".tweet .delete").click(function() {
+      let handle = $(this).closest(".tweet").find(".id").text();
+      $.post("/tweets?_method=DELETE", {handle: handle})
+       .done((data, status) => {
+        console.log(status);
+        // Recreate DOM
+        $(".container .tweet").remove();
+        loadTweets();
+       })
+       .fail((error) => {
+         console.log(error.responseText);
+       });
+    });
   }
 
   // get tweets data form server using ajax
@@ -76,8 +94,8 @@ $(document).ready(function() {
       renderTweets(data);
     })
     .done(() => {
-      // apply hover style after receiving data
-      hover();
+      // apply some style and jquery function after receiving data
+      action();
     });
   }
 

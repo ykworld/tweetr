@@ -41,6 +41,22 @@ module.exports = function(DataHelpers) {
     });
   });
 
+  tweetsRoutes.delete("/", function(req, res) {
+    if (!req.body.handle) {
+      res.status(400).json({ error: 'invalid request: no data in POST body'});
+      return;
+    }
+
+    const handle = req.body.handle;
+    DataHelpers.deleteTweet(handle, (err) => {
+      if (err) {
+        res.status(500).json({ error: err.messgae });
+      } else {
+        res.status(201).send();
+      }
+    });
+  });
+
   return tweetsRoutes;
 
 }

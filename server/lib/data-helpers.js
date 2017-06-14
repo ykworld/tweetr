@@ -15,6 +15,19 @@ module.exports = function makeDataHelpers(db) {
       });
     },
 
+    // Delete a tweet from 'db'
+    deleteTweet: function(handle, callback) {
+      simulateDelay(() => {
+        const findHandle = (tweet) => tweet.user.handle === handle;
+
+        let index = db.tweets.findIndex(findHandle);
+        if (index !== -1) {
+          db.tweets.splice(index, 1);
+          callback(null, true);
+        }
+      });
+    },
+
     // Get all tweets in `db`, sorted by newest first
     getTweets: function(callback) {
       simulateDelay(() => {
@@ -22,6 +35,5 @@ module.exports = function makeDataHelpers(db) {
         callback(null, db.tweets.sort(sortNewestFirst));
       });
     }
-
   };
 }
