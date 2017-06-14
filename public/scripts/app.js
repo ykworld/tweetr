@@ -70,10 +70,10 @@ $(document).ready(function() {
     );
 
     $(".tweet .delete").click(function() {
+      $(this).closest(".tweet").hide('slow');
       let handle = $(this).closest(".tweet").find(".id").text();
       $.post("/tweets?_method=DELETE", {handle: handle})
        .done((data, status) => {
-        console.log(status);
         // Recreate DOM
         $(".container .tweet").remove();
         loadTweets();
