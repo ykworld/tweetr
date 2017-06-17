@@ -8,6 +8,10 @@ $(document).ready(function() {
   // session connection check
   let user_id;
 
+  function clearComposeForm() {
+    $(".new-tweet textarea").val("");
+  }
+
   // clear login form
   function clearLoginForm() {
     $(".login input").val("");
@@ -273,6 +277,8 @@ $(document).ready(function() {
     $.post("/tweets", $(this).serialize())
      .done((data, status) => {
         loadTweets();
+        clearComposeForm();
+        $('.new-tweet').hide("slow");
      })
      .fail((error) => {
         console.log(error.responseText);
