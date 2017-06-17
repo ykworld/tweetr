@@ -8,6 +8,14 @@ $(document).ready(function() {
   // session connection check
   let user_id;
 
+  function clearLoginForm() {
+    $(".login input").val("");
+  }
+
+  function clearRegisterForm() {
+    $(".register input").val("");
+  }
+
   function actionWithSession() {
     $(".link-login").hide();
     $(".link-register").hide();
@@ -44,6 +52,7 @@ $(document).ready(function() {
         $(this).hide("slow");
         checksession();
         loadTweets();
+        clearLoginForm();
      })
      .fail((error) => {
         let err = JSON.parse(error.responseText);
@@ -60,6 +69,7 @@ $(document).ready(function() {
         $(this).hide("slow");
         checksession();
         loadTweets();
+        clearRegisterForm();
      })
      .fail((error) => {
         let err = JSON.parse(error.responseText);
