@@ -8,20 +8,28 @@ $(document).ready(function() {
   // session connection check
   let user_id;
 
+  function actionWithSession() {
+    $(".link-login").hide();
+    $(".link-register").hide();
+    $(".link-logout").show();
+    $(".compose").show();
+  }
+
+  function actionWithoutSession() {
+    $(".link-login").show();
+    $(".link-register").show();
+    $(".link-logout").hide();
+    $(".new-tweet").hide();
+  }
+
   function checksession() {
     $.get("/checksession", (session) => {
       if(session) {
         user_id = session.uid;
-        $(".link-login").hide();
-        $(".link-register").hide();
-        $(".link-logout").show();
-        $(".compose").show();
+        actionWithSession();
       } else {
-        $(".link-login").show();
-        $(".link-register").show();
-        $(".link-logout").hide();
-        $(".new-tweet").hide();
         user_id = "";
+        actionWithoutSession();
       }
     });
   }
@@ -34,10 +42,6 @@ $(document).ready(function() {
     $.post("/users/login", $(this).serialize())
      .done((data, status) => {
         $(this).hide("slow");
-        $(".link-login").hide();
-        $(".link-register").hide();
-        $(".link-logout").show();
-        $(".compose").show();
         checksession();
         loadTweets();
      })
@@ -54,9 +58,6 @@ $(document).ready(function() {
     $.post("/users", $(this).serialize())
      .done((data, status) => {
         $(this).hide("slow");
-        $(".link-login").hide();
-        $(".link-register").hide();
-        $(".link-logout").show();
         checksession();
         loadTweets();
      })
@@ -77,10 +78,6 @@ $(document).ready(function() {
   // Logout button event
   $(".link-logout").click(() => {
     $.get("/destroysession", (session) => {
-      $(".link-login").show();
-      $(".link-register").show();
-      $(".link-logout").hide();
-      $(".new-tweet").hide();
       checksession();
     })
   });
