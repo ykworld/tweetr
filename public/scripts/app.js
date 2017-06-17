@@ -5,6 +5,90 @@
  */
 
 $(document).ready(function() {
+  // session connection check
+  let user_id;
+
+  function checksession() {
+    $.get("/checksession", (session) => {
+      if(session) {
+        user_id = session.uid;
+        $(".link-login").hide();
+        $(".link-register").hide();
+        $(".link-logout").show();
+        $(".compose").show();
+      } else {
+        $(".link-login").show();
+        $(".link-register").show();
+        $(".link-logout").hide();
+        $(".new-tweet").hide();
+        user_id = "";
+      }
+    });
+  }
+
+  checksession();
+
+  // Login
+  $(".login").on("submit", function(event) {
+    event.preventDefault();
+    $.post("/users/login", $(this).serialize())
+     .done((data, status) => {
+        $(this).hide("slow");
+        $(".link-login").hide();
+        $(".link-register").hide();
+        $(".link-logout").show();
+        $(".compose").show();
+        checksession();
+     })
+     .fail((error) => {
+        let err = JSON.parse(error.responseText);
+        alert(err.error);
+        $(this).find("input[name='uid']").focus();
+     });
+  });
+
+  // Register
+  $(".register").on("submit", function(event) {
+    event.preventDefault();
+    $.post("/users", $(this).serialize())
+     .done((data, status) => {
+        $(this).hide("slow");
+        $(".link-login").hide();
+        $(".link-register").hide();
+        $(".link-logout").show();
+        checksession();
+     })
+     .fail((error) => {
+        let err = JSON.parse(error.responseText);
+        alert(err.error);
+        $(this).find("input[name='uid']").focus();
+     });
+  });
+
+  // Login button event
+  $(".link-login").click(() => {
+    $(".register").hide();
+    $(".login").toggle("slow");
+    $(".login input[name='uid']").focus();
+  });
+
+  // Logout button event
+  $(".link-logout").click(() => {
+    $.get("/destroysession", (session) => {
+      $(".link-login").show();
+      $(".link-register").show();
+      $(".link-logout").hide();
+      $(".new-tweet").hide();
+      checksession();
+    })
+  });
+
+  // Register button event
+  $(".link-register").click(() => {
+    $(".login").hide();
+    $(".register").toggle("slow");
+    $(".register input[name='uid']").focus();
+  });
 
   // Apply animation effect when click compose button
   $(".compose").click(() => {
@@ -20,18 +104,26 @@ $(document).ready(function() {
   }
 
   function createTweetElement(tweet) {
+
+    if (user_id !== undefined) {
+    }
+
     let $tweet = $("<article>").addClass("tweet")
+                  .append(
+                    $("<input>").addClass("pid").attr("type", "hidden").attr("value", tweet._id)
+                  )
                   .append(
                       $("<header>")
                       .append($("<img>").addClass("logo").attr("src", tweet.user.avatars.small))
                       .append($("<span>").addClass("name").text(tweet.user.name))
-                      .append($("<span>").addClass("id").text(tweet.user.handle))
+                      .append($("<span>").addClass("id").text("@" + tweet.user.handle))
                   ).append(
                       $("<section>")
                       .append($("<p>").text(tweet.content.text))
                   ).append(
                       $("<footer>")
                       .append($("<span>").addClass("date").text(jQuery.timeago(tweet.created_at)))
+                      .append($("<span>").addClass("like-count").text(tweet.like_count))
                       .append(
                               $("<div>").addClass("icons")
                                   .append(
@@ -43,7 +135,7 @@ $(document).ready(function() {
                                     .append($("<img>").attr("src", "/images/arrows.png"))
                                   )
                                   .append(
-                                    $("<a>")
+                                    $("<a>").addClass("like")
                                     .append($("<img>").attr("src", "/images/like.png"))
                                   )
                                   .append(
@@ -71,8 +163,8 @@ $(document).ready(function() {
 
     $(".tweet .delete").click(function() {
       $(this).closest(".tweet").hide('slow');
-      let handle = $(this).closest(".tweet").find(".id").text();
-      $.post("/tweets?_method=DELETE", {handle: handle})
+      let pid = $(this).closest(".tweet").find(".pid").val();
+      $.post("/tweets?_method=DELETE", {pid: pid})
        .done((data, status) => {
         // Recreate DOM
         $(".container .tweet").remove();
@@ -81,6 +173,26 @@ $(document).ready(function() {
        .fail((error) => {
          console.log(error.responseText);
        });
+    });
+
+    $(".like").click(function(event) {
+      let pid = $(this).closest(".tweet").find(".pid").val();
+      let likecount = $(this).closest(".tweet").find(".like-count");
+
+      $.ajax({
+        type: 'PUT',
+        url: "/tweets/like?_method=PUT", // A valid URL
+        data: { pid: pid } // Some data e.g. Valid JSON as a string
+      })
+      .done((msg) => {
+        // UI LIKE COUNT UPDATE
+        $.get("/tweets/like/" + pid , (data) => {
+          likecount.text(data.like_count);
+        });
+      })
+      .fail((error) => {
+        console.log(error.responseText);
+      });
     });
   }
 
@@ -119,12 +231,12 @@ $(document).ready(function() {
 
     $.post("/tweets", $(this).serialize())
      .done((data, status) => {
-      // Recreate DOM
-      $(".container .tweet").remove();
-      loadTweets();
+        // Recreate DOM
+        $(".container .tweet").remove();
+        loadTweets();
      })
      .fail((error) => {
-       console.log(error.responseText);
+        console.log(error.responseText);
      });
   });
 
