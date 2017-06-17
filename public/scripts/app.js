@@ -189,14 +189,6 @@ $(document).ready(function() {
       let likeImage = $(this).find("img");
       let clicked = likeImage.attr("data");
 
-      if (clicked === 'true') {
-        clicked = 'false';
-      } else {
-        clicked = 'true';
-      }
-
-      likeImage.attr("data", clicked);
-
       $.ajax({
         type: 'PUT',
         url: "/tweets/like?_method=PUT", // A valid URL
@@ -207,6 +199,14 @@ $(document).ready(function() {
         $.get("/tweets/like/" + pid , (data) => {
           likecount.text(data.like_count);
         });
+
+        if (clicked === 'true') {
+          clicked = 'false';
+        } else {
+          clicked = 'true';
+        }
+
+        likeImage.attr("data", clicked);
       })
       .fail((error) => {
         console.log(error.responseText);
