@@ -8,14 +8,17 @@ $(document).ready(function() {
   // session connection check
   let user_id;
 
+  // clear login form
   function clearLoginForm() {
     $(".login input").val("");
   }
 
+  // celar registe form
   function clearRegisterForm() {
     $(".register input").val("");
   }
 
+  // action when a user has session
   function actionWithSession() {
     $(".link-login").hide();
     $(".link-register").hide();
@@ -23,6 +26,7 @@ $(document).ready(function() {
     $(".compose").show();
   }
 
+  // action when a user has no session
   function actionWithoutSession() {
     $(".link-login").show();
     $(".link-register").show();
@@ -30,6 +34,7 @@ $(document).ready(function() {
     $(".new-tweet").hide();
   }
 
+  // check seesion from server
   function checksession() {
     $.get("/checksession", (session) => {
       if(session) {
@@ -42,6 +47,7 @@ $(document).ready(function() {
     });
   }
 
+  // excute session check
   checksession();
 
   // Login
@@ -113,7 +119,7 @@ $(document).ready(function() {
   }
 
   function createTweetElement(tweet) {
-    // check like button click status
+    // check like button click status before rendering
     let clicked = false;
     if (user_id !== undefined) {
       if(tweet.likes) {
@@ -166,6 +172,7 @@ $(document).ready(function() {
     return $tweet;
   }
 
+  // excute after callback done
   function action() {
     $(".tweet").hover(
       function() {
@@ -179,6 +186,8 @@ $(document).ready(function() {
       }
     );
 
+
+    // made delete button for only easy debugging
     $(".tweet .delete").click(function() {
       $(this).closest(".tweet").hide('slow');
       let pid = $(this).closest(".tweet").find(".pid").val();
@@ -193,6 +202,7 @@ $(document).ready(function() {
        });
     });
 
+    // Like image processing
     $(".like").click(function(event) {
       let pid = $(this).closest(".tweet").find(".pid").val();
       let likecount = $(this).closest(".tweet").find(".like-count");
@@ -210,6 +220,7 @@ $(document).ready(function() {
           likecount.text(data.like_count);
         });
 
+        // data attribute setting
         if (clicked === 'true') {
           clicked = 'false';
         } else {
