@@ -311,12 +311,17 @@ button, [type='button'], [type='reset'], [type='submit'] {
     float: right;
     line-height: 2em;
     display: none; }
+  .tweet footer .like img[data='true'] {
+    background-image: url("../images/like_click.png"); }
+  .tweet footer .like img[data='false'] {
+    background-image: url("../images/like.png"); }
   .tweet footer img {
     width: 1.2em;
     height: 1.2em;
     vertical-align: middle;
     margin-left: 0.2em;
-    cursor: pointer; }
+    cursor: pointer;
+    background-size: 1.2em 1.2em; }
 
 .tweet_hover {
   border: 1px solid #244751 !important; }

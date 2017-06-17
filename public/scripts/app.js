@@ -39,6 +39,7 @@ $(document).ready(function() {
         $(".link-logout").show();
         $(".compose").show();
         checksession();
+        loadTweets();
      })
      .fail((error) => {
         let err = JSON.parse(error.responseText);
@@ -57,6 +58,7 @@ $(document).ready(function() {
         $(".link-register").hide();
         $(".link-logout").show();
         checksession();
+        loadTweets();
      })
      .fail((error) => {
         let err = JSON.parse(error.responseText);
@@ -104,8 +106,17 @@ $(document).ready(function() {
   }
 
   function createTweetElement(tweet) {
-
+    // check like button click status
+    let clicked = false;
     if (user_id !== undefined) {
+      if(tweet.likes) {
+        for (idx in tweet.likes) {
+          if(tweet.likes[idx].uid === user_id) {
+            clicked = true;
+            break;
+          }
+        }
+      }
     }
 
     let $tweet = $("<article>").addClass("tweet")
@@ -136,7 +147,7 @@ $(document).ready(function() {
                                   )
                                   .append(
                                     $("<a>").addClass("like")
-                                    .append($("<img>").attr("src", "/images/like.png"))
+                                    .append($("<img>").attr("src", "data:image/gif;base64,R0lGODlhAQABAPcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAP8ALAAAAAABAAEAAAgEAP8FBAA7").attr("data", clicked))
                                   )
                                   .append(
                                     $("<a>").addClass("delete")
@@ -178,6 +189,16 @@ $(document).ready(function() {
     $(".like").click(function(event) {
       let pid = $(this).closest(".tweet").find(".pid").val();
       let likecount = $(this).closest(".tweet").find(".like-count");
+      let likeImage = $(this).find("img");
+      let clicked = likeImage.attr("data");
+
+      if (clicked === 'true') {
+        clicked = 'false';
+      } else {
+        clicked = 'true';
+      }
+
+      likeImage.attr("data", clicked);
 
       $.ajax({
         type: 'PUT',
@@ -198,6 +219,8 @@ $(document).ready(function() {
 
   // get tweets data form server using ajax
   function loadTweets() {
+    // Recreate DOM
+    $(".container .tweet").remove();
     $.get("/tweets", (data) => {
       // sort by date
       data = data.sort((a, b) => {
@@ -231,8 +254,6 @@ $(document).ready(function() {
 
     $.post("/tweets", $(this).serialize())
      .done((data, status) => {
-        // Recreate DOM
-        $(".container .tweet").remove();
         loadTweets();
      })
      .fail((error) => {
