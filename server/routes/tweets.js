@@ -7,6 +7,7 @@ const tweetsRoutes  = express.Router({mergeParams: true});
 
 module.exports = function(DataHelpers) {
 
+  // [tweets] => read all tweets
   tweetsRoutes.get("/", function(req, res) {
     DataHelpers.getTweets((err, tweets) => {
       if (err) {
@@ -17,6 +18,7 @@ module.exports = function(DataHelpers) {
     });
   });
 
+  // [tweets] => post tweets
   tweetsRoutes.post("/", function(req, res) {
     if (!req.body.text) {
       res.status(400).json({ error: 'invalid request: no data in POST body'});
@@ -54,6 +56,7 @@ module.exports = function(DataHelpers) {
     });
   });
 
+  // [tweets/like] =>  update like count
   tweetsRoutes.put("/like", function(req, res) {
     if (!req.body) {
       res.status(400).json({ error: 'invalid request: no data in POST body'});
@@ -106,6 +109,7 @@ module.exports = function(DataHelpers) {
     });
   });
 
+  // [tweets/like/:id] => read likes
   tweetsRoutes.get("/like/:id", (req, res) => {
     if (!req.params) {
       res.status(400).json({ error: 'invalid request: no data in params'});
@@ -122,6 +126,7 @@ module.exports = function(DataHelpers) {
     });
   });
 
+  // [tweets/like] = > delete like
   tweetsRoutes.delete("/like", function(req, res) {
     if (!req.body) {
       res.status(400).json({ error: 'invalid request: no data in POST body'});
@@ -142,6 +147,7 @@ module.exports = function(DataHelpers) {
     });
   });
 
+  // [tweets] => delete tweet
   tweetsRoutes.delete("/", function(req, res) {
     if (!req.body.pid) {
       res.status(400).json({ error: 'invalid request: no data in POST body'});

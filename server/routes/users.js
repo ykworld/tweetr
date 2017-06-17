@@ -8,6 +8,7 @@ const bcrypt        = require('bcrypt');
 
 module.exports = function(DataHelpers) {
 
+  // [user] => read all users
   usersRoutes.get("/", function(req, res) {
     DataHelpers.getTweets((err, users) => {
       if (err) {
@@ -18,6 +19,7 @@ module.exports = function(DataHelpers) {
     });
   });
 
+  // [user/login] => login
   usersRoutes.post("/login", function(req, res) {
     if (!req.body) {
       res.status(400).json({ error: 'invalid request: no data in POST body'});
@@ -47,6 +49,7 @@ module.exports = function(DataHelpers) {
     })
   });
 
+  // [user] => add user
   usersRoutes.post("/", function(req, res) {
     if (!req.body) {
       res.status(400).json({ error: 'invalid request: no data in POST body'});

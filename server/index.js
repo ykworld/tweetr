@@ -54,10 +54,12 @@ MongoClient.connect(MONGODB_URI, (err, db) => {
   app.use("/tweets", tweetsRoutes);
   app.use("/users", usersRoutes);
 
+  // check session
   app.get("/checksession", (req, res) => {
     res.send(req.session.user);
   });
 
+  // destory session
   app.get("/destroysession", (req, res) => {
     req.session = null;
     res.send(null);
