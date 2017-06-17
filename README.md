@@ -5,7 +5,7 @@ Tweeter is a simple, single-page Twitter clone.
 This repository is the starter code for the project: Students will fork and clone this repository, then build upon it to practice their HTML, CSS, JS, jQuery and AJAX front-end skills, and their Node, Express and MongoDB back-end skills.
 
 ## Final Product
-!["screenshot of URLs page"](https://github.com/ykworld/project-tinyapp/blob/master/docs/tweeter.png)
+!["screenshot of URLs page"](https://github.com/ykworld/tweetr/blob/master/docs/tweeter.png)
 
 ## Getting Started
 
