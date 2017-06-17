@@ -8,8 +8,10 @@ $(document).ready(function() {
   // session connection check
   let user_id;
 
+  // clear compose form
   function clearComposeForm() {
     $(".new-tweet textarea").val("");
+    $(".new-tweet .counter").text("140");
   }
 
   // clear login form
